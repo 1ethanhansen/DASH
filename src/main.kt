@@ -1,4 +1,5 @@
 var board = arrayOf<Array<Int>>()
+var currentPlayer = -1
 
 fun initBlank() {
     for (i in 0..2) {
@@ -61,8 +62,80 @@ Here is an example: say the board has just been started. (see above for starting
 Player -1 could select piece 7 to move and move it to square 5""")
 }
 
-fun move(current : Int, next : Int, player : Int) {
-    
+fun move(player : Int, current : Int, next : Int) {
+    val col = (current - 1) % 3
+    var row = 0
+    when {
+        current < 4 -> row = 0
+        current < 7 -> row = 1
+        current < 10 -> row = 2
+    }
+
+    if (board[row][col] == player) {
+        val colNext = (next - 1) % 3
+        var rowNext = 0
+        when {
+            next < 4 -> rowNext = 0
+            next < 7 -> rowNext = 1
+            next < 10 -> rowNext = 2
+        }
+        if (board[rowNext][colNext] == 0) {
+            board[row][col] = 0
+            board[rowNext][colNext] = player
+        }
+    }
+}
+
+fun checkForWin() : Boolean {
+    var output = false
+
+    for (i in 0..2) {
+        if (board[0][i] == board[1][i] && board[1][i] == board[2][i]) {
+            output = true
+        }
+    }
+
+    for (i in 0..2) {
+        if (board[i][0] == board[i][2] && board[i][1] == board[i][2]) {
+            output = true
+        }
+    }
+
+    if (board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+        output = true
+    }
+
+    if (board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
+        output = true
+    }
+
+    return output
+}
+
+fun takeTurn() {
+    print("Enter the location of the piece you want to move: ")
+    var inputStr = readLine()
+
+    if (inputStr == null) {
+        print("Hey that's null")
+    }
+
+    val inputPiece = inputStr!!.toInt()
+
+    print("Enter the location you want that piece to move: ")
+    inputStr = readLine()
+
+    if (inputStr == null) {
+        print("Hey that's null")
+    }
+
+    val inputPlace = inputStr!!.toInt()
+
+    move(currentPlayer, inputPiece, inputPlace)
+
+    printBoard()
+
+    currentPlayer *= -1
 }
 
 fun main() {
@@ -71,5 +144,9 @@ fun main() {
         resetBoard()
 
         options()
+
+        while (checkForWin() == true) {
+            takeTurn()
+        }
     }
 }
