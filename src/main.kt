@@ -43,6 +43,13 @@ fun options() {
 
     when (option) {
         "3" -> rules()
+        "2" -> { do {
+            takeTurn()
+        } while (checkForWin() == 0)
+            printBoard()
+            print("Winner is ${checkForWin()}")
+        }
+        "1" -> onePlayer()
     }
 }
 
@@ -86,34 +93,35 @@ fun move(player : Int, current : Int, next : Int) {
     }
 }
 
-fun checkForWin() : Boolean {
-    var output = false
+fun checkForWin() :Int {
+    var output = 0
 
     for (i in 0..2) {
         if (board[0][i] == board[1][i] && board[1][i] == board[2][i]) {
-            output = true
+            output = board[0][i]
         }
     }
 
     for (i in 0..2) {
         if (board[i][0] == board[i][2] && board[i][1] == board[i][2]) {
-            output = true
+            output = board[0][i]
         }
     }
 
     if (board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
-        output = true
+        output = board[0][0]
     }
 
     if (board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
-        output = true
+        output = board[0][2]
     }
 
     return output
 }
 
 fun takeTurn() {
-    print("Enter the location of the piece you want to move: ")
+    printBoard()
+    print("Player ${currentPlayer}: Enter the location of the piece you want to move: ")
     var inputStr = readLine()
 
     if (inputStr == null) {
@@ -133,9 +141,24 @@ fun takeTurn() {
 
     move(currentPlayer, inputPiece, inputPlace)
 
-    printBoard()
-
     currentPlayer *= -1
+}
+
+fun aiTurn() {
+
+}
+
+fun onePlayer() {
+    print("Do you want to be player 1 or player -1? ")
+    val inputStr = readLine()
+
+    val player = inputStr!!.toInt()
+
+    if (player == currentPlayer) {
+        takeTurn()
+    } else {
+        aiTurn()
+    }
 }
 
 fun main() {
@@ -144,9 +167,5 @@ fun main() {
         resetBoard()
 
         options()
-
-        while (checkForWin() == true) {
-            takeTurn()
-        }
     }
 }
