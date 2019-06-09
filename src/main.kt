@@ -145,7 +145,21 @@ fun takeTurn() {
 }
 
 fun aiTurn() {
-
+    /*
+    if (state is known) {
+        take best action
+        if (new state has reward) {
+            update last state-action pair
+        }
+    } else {
+        create new state
+        take random action
+        if (new state has reward) {
+            update last state-action pair
+        }
+    }
+    give turn to other player
+     */
 }
 
 fun onePlayer() {
